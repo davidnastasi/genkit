@@ -79,8 +79,7 @@ func applyEngineOptions(opts []Option) (engineConfig, error) {
 	return *cfg, nil
 }
 
-// getUser retrieves the username, a flag indicating if IAM authentication
-// will be used and an error.
+// getUser retrieves the username, a flag indicating if IAM authentication will be used and an error.
 func getUser(ctx context.Context, config engineConfig) (string, bool, error) {
 	if config.user != "" && config.password != "" {
 		// If both username and password are provided use provided username.
