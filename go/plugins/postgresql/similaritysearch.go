@@ -6,9 +6,6 @@ import (
 	"strings"
 )
 
-// defaultDistanceStrategy is the default strategy used if none is provided.
-var defaultDistanceStrategy = CosineDistance{}
-
 // SimilaritySearchOption option for SimilaritySearch
 type SimilaritySearchOption func(vs *SimilaritySearch)
 
@@ -22,7 +19,7 @@ type SimilaritySearch struct {
 	metadataColumns    []string
 
 	filter           any
-	count            int
+	k                int
 	distanceStrategy DistanceStrategy
 }
 
@@ -78,7 +75,7 @@ func WithMetadataColumns(metadataColumns []string) SimilaritySearchOption {
 // WithCount sets the number of Documents to return from the SimilaritySearch.
 func WithCount(count int) SimilaritySearchOption {
 	return func(v *SimilaritySearch) {
-		v.count = count
+		v.k = count
 	}
 }
 
@@ -97,6 +94,8 @@ func NewSimilaritySearch(opts ...SimilaritySearchOption) *SimilaritySearch {
 		metadataJsonColumn: defaultMetadataJsonColumn,
 		contentColumn:      defaultContentColumn,
 		embeddingColumn:    defaultEmbeddingColumn,
+		k:                  defaultCount,
+		distanceStrategy:   defaultDistanceStrategy,
 	}
 	vs.applyOptions(opts)
 	return vs
@@ -132,7 +131,7 @@ func (ss *SimilaritySearch) buildQuery(embedding []float32) string {
 	stmt := fmt.Sprintf(`
         SELECT %s, %s(%s, '%s') AS distance FROM "%s"."%s" %s ORDER BY %s %s '%s' LIMIT %d;`,
 		columnNames, searchFunction, ss.embeddingColumn, vectorToString(embedding), ss.schemaName, ss.tableName,
-		whereClause, ss.embeddingColumn, operator, vectorToString(embedding), ss.count)
+		whereClause, ss.embeddingColumn, operator, vectorToString(embedding), ss.k)
 
 	return stmt
 }

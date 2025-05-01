@@ -9,7 +9,17 @@ import (
 )
 
 type docStore struct {
-	engine          PostgresEngine
+	engine PostgresEngine
+
+	tableName             string
+	schemaName            string
+	idColumn              string
+	metadataJsonColumn    string
+	contentColumn         string
+	embeddingColumn       string
+	metadataColumns       []string
+	ignoreMetadataColumns []string
+
 	embedder        ai.Embedder
 	embedderOptions any
 }
@@ -41,7 +51,7 @@ func (ds *docStore) query(ctx context.Context, ss *SimilaritySearch, embbeding [
 			return nil, fmt.Errorf("scan row failed: %v", err)
 		}
 
-		meta := make(map[string]any, ss.count)
+		meta := make(map[string]any, ss.k)
 		var content []*ai.Part
 		for i, col := range columnNames {
 			if (len(ss.metadataColumns) > 0 && !slices.Contains(ss.metadataColumns, col)) &&
