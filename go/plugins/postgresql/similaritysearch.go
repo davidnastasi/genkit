@@ -10,7 +10,9 @@ import (
 type SimilaritySearchOption func(vs *SimilaritySearch)
 
 type SimilaritySearch struct {
-	tableName          string
+	VectorStore
+
+	/*tableName          string
 	schemaName         string
 	idColumn           string
 	metadataJsonColumn string
@@ -23,6 +25,7 @@ type SimilaritySearch struct {
 	distanceStrategy DistanceStrategy
 }
 
+/*
 // WithSchemaName sets the SimilaritySearch's schemaName field.
 func WithSchemaName(schemaName string) SimilaritySearchOption {
 	return func(v *SimilaritySearch) {
@@ -72,6 +75,9 @@ func WithMetadataColumns(metadataColumns []string) SimilaritySearchOption {
 	}
 }
 
+*/
+
+
 // WithCount sets the number of Documents to return from the SimilaritySearch.
 func WithCount(count int) SimilaritySearchOption {
 	return func(v *SimilaritySearch) {
@@ -86,16 +92,26 @@ func WithDistanceStrategy(distanceStrategy DistanceStrategy) SimilaritySearchOpt
 	}
 }
 
+
+// WithFilter sets the filter used by the SimilaritySearch.
+func WithFilter(filter string) SimilaritySearchOption {
+	return func(v *SimilaritySearch) {
+		v.filter = filter
+	}
+}
+
 func NewSimilaritySearch(opts ...SimilaritySearchOption) *SimilaritySearch {
 	vs := &SimilaritySearch{
-		tableName:          defaultTable,
-		schemaName:         defaultSchemaName,
-		idColumn:           defaultIDColumn,
-		metadataJsonColumn: defaultMetadataJsonColumn,
-		contentColumn:      defaultContentColumn,
-		embeddingColumn:    defaultEmbeddingColumn,
-		k:                  defaultCount,
-		distanceStrategy:   defaultDistanceStrategy,
+		VectorStore: VectorStore{
+			tableName:          defaultTable,
+			schemaName:         defaultSchemaName,
+			idColumn:           defaultIDColumn,
+			metadataJsonColumn: defaultMetadataJsonColumn,
+			contentColumn:      defaultContentColumn,
+			embeddingColumn:    defaultEmbeddingColumn,
+		},
+		k:                defaultCount,
+		distanceStrategy: defaultDistanceStrategy,
 	}
 	vs.applyOptions(opts)
 	return vs

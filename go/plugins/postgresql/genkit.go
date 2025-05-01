@@ -46,12 +46,17 @@ func (p *Postgres) Init(ctx context.Context, g *genkit.Genkit) error {
 
 // Config provides configuration options for [DefineIndexer] and [DefineRetriever].
 type Config struct {
-	Name            string
-	TableName       string
-	SchemaName      string
-	ContentColumn   string
-	EmbeddingColumn string
-	MetadataColumns []string
+	Name string
+
+	TableName             string
+	SchemaName            string
+	IDColumn              string
+	ContentColumn         string
+	EmbeddingColumn       string
+	MetadataJsonColumn    string
+	MetadataColumns       []string
+	IgnoreMetadataColumns []string
+
 	Embedder        ai.Embedder // Embedder to use. Required.
 	EmbedderOptions any         // Options to pass to the embedder.
 }
