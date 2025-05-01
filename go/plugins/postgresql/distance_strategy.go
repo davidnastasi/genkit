@@ -63,6 +63,7 @@ func (i InnerProduct) similaritySearchFunction() string {
 	return "inner_product"
 }
 
+
 type Index interface {
 	Options() string
 }
@@ -98,3 +99,4 @@ func (i IVFFlatOptions) Options() string {
 func (index *BaseIndex) indexOptions() string {
 	return index.options.Options()
 }
+

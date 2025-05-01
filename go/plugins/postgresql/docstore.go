@@ -2,6 +2,7 @@ package postgresql
 
 import (
 	"context"
+
 	"encoding/json"
 	"fmt"
 	"slices"
@@ -11,6 +12,7 @@ import (
 	"github.com/firebase/genkit/go/ai"
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5"
+
 )
 
 type docStore struct {
@@ -28,6 +30,7 @@ type docStore struct {
 	embedder        ai.Embedder
 	embedderOptions any
 }
+
 
 // newDocStore instantiate a docStore
 func newDocStore(ctx context.Context, p *Postgres, cfg Config) (*docStore, error) {
@@ -67,6 +70,7 @@ func newDocStore(ctx context.Context, p *Postgres, cfg Config) (*docStore, error
 		embedderOptions: cfg.EmbedderOptions,
 	}, nil
 }
+
 
 func (ds *docStore) query(ctx context.Context, ss *SimilaritySearch, embbeding []float32) (*ai.RetrieverResponse, error) {
 	res := &ai.RetrieverResponse{}
@@ -162,15 +166,18 @@ func (ds *docStore) Retrieve(ctx context.Context, req *ai.RetrieverRequest) (*ai
 	return res, nil
 }
 
+
 type IndexerOptions struct {
 	VectorStore *VectorStore
 }
 
-// Index implements the genkit  Indexer method.
+
+// Index implements the genkit Retriever.Index method.
 func (ds *docStore) Index(ctx context.Context, req *ai.IndexerRequest) error {
 	if len(req.Documents) == 0 {
 		return nil
 	}
+
 
 	/*if req.Options == nil {
 		vs, _ := NewVectorStore()

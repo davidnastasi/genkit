@@ -19,7 +19,7 @@ type SimilaritySearch struct {
 	contentColumn      string
 	embeddingColumn    string
 	metadataColumns    []string
-	*/
+
 	filter           any
 	k                int
 	distanceStrategy DistanceStrategy
@@ -74,7 +74,9 @@ func WithMetadataColumns(metadataColumns []string) SimilaritySearchOption {
 		v.metadataColumns = metadataColumns
 	}
 }
+
 */
+
 
 // WithCount sets the number of Documents to return from the SimilaritySearch.
 func WithCount(count int) SimilaritySearchOption {
@@ -89,6 +91,7 @@ func WithDistanceStrategy(distanceStrategy DistanceStrategy) SimilaritySearchOpt
 		v.distanceStrategy = distanceStrategy
 	}
 }
+
 
 // WithFilter sets the filter used by the SimilaritySearch.
 func WithFilter(filter string) SimilaritySearchOption {
